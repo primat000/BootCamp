@@ -290,6 +290,7 @@ int main()
 	const sf::Time fixedUpdateTime = sf::milliseconds(3);
 
 	bool isGame = false;
+	int iteration = 0;
 	while (rw.isOpen())
 	{
 		while (!isGame)
@@ -530,8 +531,21 @@ int main()
 		{
 			debugConsole.Draw(rw);
 		}
+		
+		++iteration;
 		drawableManager.DrawScene(rw);
 		ui.Render();
+		if (iteration % 10 == 0)
+		{
+			sf::Vector2u windowSize = rw.getSize();
+			sf::Texture texture;
+			texture.create(windowSize.x, windowSize.y);
+			texture.update(rw);
+			sf::Image screenshot = texture.copyToImage();
+
+			sf::String file = std::to_string(iteration) + ".png";
+			screenshot.saveToFile(file);
+		}
 	}
 	
 	if (leaderboard != nullptr) {
